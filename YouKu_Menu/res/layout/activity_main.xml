@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:paddingLeft="-6dp"
             android:src="@drawable/icon_menu" />
 
         <ImageView
@@ -64,7 +65,9 @@
         android:layout_height="160dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/level3" >
+        android:background="@drawable/level3"
+        android:visibility="invisible"
+         >
 
         <ImageView
             android:id="@+id/iv_channel1"
@@ -126,7 +129,6 @@
             android:layout_alignTop="@+id/iv_channel3"
             android:layout_toLeftOf="@+id/iv_channel6"
             android:src="@drawable/channel5" />
-
     </RelativeLayout>
 
 </RelativeLayout>
