@@ -133,4 +133,12 @@
             android:src="@drawable/channel5" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="点击菜单键，看看多级环形菜单" />
+
 </RelativeLayout>

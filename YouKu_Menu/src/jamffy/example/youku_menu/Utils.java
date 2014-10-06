@@ -7,6 +7,10 @@ import android.widget.RelativeLayout;
 public class Utils {
 
 	public static void setAnimationIn(View v) {
+		setAnimationIn(v, 0);
+	}
+
+	public static void setAnimationIn(View v, int time) {
 		RotateAnimation ra1 = new RotateAnimation(0, 180, v.getWidth() / 2,
 				v.getHeight());
 		ra1.setDuration(1);
@@ -17,7 +21,9 @@ public class Utils {
 				v.getHeight());
 		ra2.setDuration(500);
 		ra2.setFillAfter(true); // 动画执行完以后，保持最后的状态
+		ra2.setStartOffset(time);
 		v.setAnimation(ra2);
+
 	}
 
 	public static void setAnimationout(View v) {

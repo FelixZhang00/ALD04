@@ -3,6 +3,7 @@ package jamffy.example.youku_menu;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private boolean mIsLev3Show = false;
 	private boolean mIsLev2Show = false;
+	private boolean mIsLev1Show = true;
 	private String TAG = "MainActivity";
 
 	@Override
@@ -83,6 +85,44 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		default:
 			break;
+		}
+
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			changeLevStatus();
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	/**
+	 * 当点击菜单键后 改变多级菜单的状态
+	 */
+	private void changeLevStatus() {
+		// 如果菜单都隐藏，则依次显示1、2级菜单
+		// 如果有显示的，就依次全部隐藏
+
+		if (mIsLev1Show) {
+			// 如果有显示的，就依次全部隐藏
+			if (mIsLev3Show) {
+				Utils.setAnimationout(wRL_lev3);
+				mIsLev3Show = false;
+			}
+			if (mIsLev2Show) {
+				Utils.setAnimationout(wRL_lev2, 200);
+				mIsLev2Show = false;
+			}
+			Utils.setAnimationout(wRL_lev1, 100);
+			mIsLev1Show = false;
+		} else {
+			// 如果菜单都隐藏，则依次显示1、2级菜单
+			Utils.setAnimationIn(wRL_lev1);
+			mIsLev1Show = true;
+			Utils.setAnimationIn(wRL_lev2,200);
+			mIsLev2Show = true;
 		}
 
 	}
