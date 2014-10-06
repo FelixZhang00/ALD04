@@ -16,8 +16,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView wIm_home;
 	private ImageView wIm_menu;
 
-	private boolean mIsMenuChecked = false;
-	private String TAG="MainActivity";
+	private boolean mIsLev3Show = false;
+	private boolean mIsLev2Show = false;
+	private String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +48,36 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_menu:
-			
+
 			// 点击后实现 第三级菜单的旋转动画效果
-			if (!mIsMenuChecked) {
+			if (!mIsLev3Show) {
 				// 启动显示动画
 				Utils.setAnimationIn(wRL_lev3);
 			} else {
 				// 启动隐藏动画
 				Utils.setAnimationout(wRL_lev3);
 			}
-			mIsMenuChecked = !mIsMenuChecked;
+			mIsLev3Show = !mIsLev3Show;
 
 			break;
 
 		case R.id.iv_home:
+			// 点击home图标后，如果当前没有2级菜单就显示，存在2、3级菜单就有层次地隐藏
+
+			if (mIsLev2Show) {
+				// 存在2、3级菜单就有层次地隐藏
+				Utils.setAnimationout(wRL_lev2);
+				mIsLev2Show = false;
+				if (mIsLev3Show) {
+					Utils.setAnimationout(wRL_lev3, 200); // 延迟隐藏，有层次感
+					mIsLev3Show = false;
+				}
+
+			} else {
+				// 如果当前没有2级菜单就显示
+				Utils.setAnimationIn(wRL_lev2);
+				mIsLev2Show = true;
+			}
 
 			break;
 

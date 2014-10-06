@@ -2,6 +2,7 @@ package jamffy.example.youku_menu;
 
 import android.view.View;
 import android.view.animation.RotateAnimation;
+import android.widget.RelativeLayout;
 
 public class Utils {
 
@@ -20,11 +21,23 @@ public class Utils {
 	}
 
 	public static void setAnimationout(View v) {
-		RotateAnimation ra1=new RotateAnimation(0, 180, v.getWidth()/2, v.getHeight());
+		setAnimationout(v, 0);
+
+	}
+
+	/**
+	 * @param v
+	 * @param time
+	 *            延迟时间
+	 */
+	public static void setAnimationout(View v, int time) {
+		RotateAnimation ra1 = new RotateAnimation(0, 180, v.getWidth() / 2,
+				v.getHeight());
 		ra1.setDuration(500);
-		ra1.setFillAfter(true); //动画执行完以后，保持最后的状态
+		ra1.setFillAfter(true); // 动画执行完以后，保持最后的状态
+		ra1.setStartOffset(time); // 设置延迟时间
 		v.startAnimation(ra1);
-		
+
 	}
 
 }

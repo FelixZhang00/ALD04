@@ -27,7 +27,9 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/level2" >
+        android:background="@drawable/level2" 
+        android:visibility="invisible"
+        >
 
         <ImageView
             android:id="@+id/iv_search"
