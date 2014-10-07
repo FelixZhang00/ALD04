@@ -23,6 +23,9 @@ public class MyToggleButton extends View implements OnClickListener {
 	private Bitmap slideBtn;
 	private Paint paint;
 
+	// 按钮的左边界，改变左边界的值就能实现拖动效果了
+	private int slideBtn_left = 0;
+
 	/**
 	 * 在代码里面创建对象的时候，使用此构造方法
 	 */
@@ -83,7 +86,7 @@ public class MyToggleButton extends View implements OnClickListener {
 		canvas.drawBitmap(bgBitmap, 0, 0, paint);
 
 		// 绘制按钮
-		canvas.drawBitmap(slideBtn, 0, 0, paint);
+		canvas.drawBitmap(slideBtn, slideBtn_left, 0, paint);
 		super.onDraw(canvas);
 	}
 
@@ -97,10 +100,27 @@ public class MyToggleButton extends View implements OnClickListener {
 		super.onLayout(changed, left, top, right, bottom);
 	}
 
+	private boolean isDrag = false;
+	// 记录开关当前的状态. false 为关
+	private boolean btnStat = false;
+
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		btnStat = !btnStat;
+		flushView();
 
+	}
+
+	/**
+	 * 刷新当请view的状态
+	 */
+	private void flushView() {
+		if (btnStat) {
+			slideBtn_left = bgBitmap.getWidth() - slideBtn.getWidth();
+		} else {
+			slideBtn_left = 0;
+		}
+		invalidate();
 	}
 
 }
