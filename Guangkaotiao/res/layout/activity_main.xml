@@ -19,6 +19,7 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/tv_imagdesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -32,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:orientation="horizontal" >
         </LinearLayout>
     </LinearLayout>
