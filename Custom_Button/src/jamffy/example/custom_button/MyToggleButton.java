@@ -108,20 +108,20 @@ public class MyToggleButton extends View implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		btnStat = !btnStat;
-		flushView();
+		flushViewStat();
 
 	}
 
 	/**
 	 * 刷新当请view的状态
 	 */
-	private void flushView() {
+	private void flushViewStat() {
 		if (btnStat) {
 			slideBtn_left = bgBitmap.getWidth() - slideBtn.getWidth();
 		} else {
 			slideBtn_left = 0;
 		}
-		invalidate();
+		flushView();
 	}
 
 	// 记录当前手指拖动按钮的位置
@@ -143,7 +143,7 @@ public class MyToggleButton extends View implements OnClickListener {
 		case MotionEvent.ACTION_MOVE:
 			// 手指移动的距离
 			int dis = (int) (event.getX() - lastx);
-			
+
 			lastx = (int) event.getX();
 			slideBtn_left += dis;
 			break;
@@ -156,8 +156,20 @@ public class MyToggleButton extends View implements OnClickListener {
 			break;
 		}
 
-		invalidate();
+		flushView();
 
 		return true;
+	}
+
+	/**
+	 * 刷新前判断范围
+	 */
+	private void flushView() {
+		// 确保按钮在可移动范围内 即 slideBtn_left∈[0,maxleft]
+		int maxleft = bgBitmap.getWidth() - slideBtn.getWidth();
+		slideBtn_left = (slideBtn_left > 0) ? slideBtn_left : 0;
+		slideBtn_left = (slideBtn_left <maxleft) ? slideBtn_left : maxleft;
+
+		invalidate();
 	}
 }
