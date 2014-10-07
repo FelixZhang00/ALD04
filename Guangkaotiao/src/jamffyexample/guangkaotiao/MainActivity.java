@@ -3,10 +3,13 @@ package jamffyexample.guangkaotiao;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -62,18 +65,20 @@ public class MainActivity extends Activity {
 
 			point.setBackgroundResource(R.drawable.point_selector);
 			// 处理point的显示状态
-			if (i ==R.drawable.d) {
+			if (i == R.drawable.d) {
 				point.setEnabled(false);
 			} else {
 				point.setEnabled(true);
 			}
-			
+
 			wLL_pointGroup.addView(point);
 
 		}
 
 		wVp.setAdapter(new MyPageAdapter());
-
+		// 找到一个%mList.size()后为0的位置，即展示第一张图片实际上位置不是第一个
+		wVp.setCurrentItem(Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2)
+				% mList.size());
 		wVp.setOnPageChangeListener(new OnPageChangeListener() {
 
 			/*
@@ -81,6 +86,7 @@ public class MainActivity extends Activity {
 			 */
 			@Override
 			public void onPageSelected(int position) {
+				position = position % mList.size();
 				// 设置图片说明
 				wTv_imagDesc.setText(imageDescriptions[position]);
 				// 改变指示点状态
@@ -104,27 +110,56 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		isRunning=true;
+		handler.sendEmptyMessageDelayed(0, 1000);
 
+	}
+
+	private boolean isRunning = false;
+	// 用handler 发送延时消息,实现viewpage自动循环滚动
+	private Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			
+			wVp.setCurrentItem(wVp.getCurrentItem()+1);
+			
+			if (isRunning) {
+				handler.sendEmptyMessageDelayed(0, 1000);				
+			}
+			super.handleMessage(msg);
+		}
+
+	};
+
+	@Override
+	protected void onDestroy() {
+		isRunning = false;
+		super.onDestroy();
 	}
 
 	public class MyPageAdapter extends PagerAdapter {
 
 		@Override
 		public int getCount() {
-			return mList.size();
+			return Integer.MAX_VALUE;
 		}
 
 		@Override
 		public boolean isViewFromObject(View view, Object object) {
+			if (view == object) {
+				return true;
+			} else {
+				return false;
+			}
 
-			return view == object;
 		}
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 
-			container.addView(mList.get(position));
-			return mList.get(position);
+			container.addView(mList.get(position % mList.size()));
+			return mList.get(position % mList.size());
 		}
 
 		@Override
