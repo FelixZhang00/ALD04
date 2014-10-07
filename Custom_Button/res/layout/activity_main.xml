@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context="jamffy.example.custom_button.MainActivity" >
 
-    <TextView
+    <jamffy.example.custom_button.MyToggleButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
