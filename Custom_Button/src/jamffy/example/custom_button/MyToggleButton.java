@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -123,4 +124,40 @@ public class MyToggleButton extends View implements OnClickListener {
 		invalidate();
 	}
 
+	// 记录当前手指拖动按钮的位置
+	private int lastx;
+	// 记录第一次触摸的值
+	private int firstx;
+
+	/*
+	 * 返回true在当前view就消费掉触摸事件，不再向下分发
+	 */
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		super.onTouchEvent(event);
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			firstx = lastx = (int) event.getX();
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			// 手指移动的距离
+			int dis = (int) (event.getX() - lastx);
+			
+			lastx = (int) event.getX();
+			slideBtn_left += dis;
+			break;
+
+		case MotionEvent.ACTION_UP:
+
+			break;
+
+		default:
+			break;
+		}
+
+		invalidate();
+
+		return true;
+	}
 }
