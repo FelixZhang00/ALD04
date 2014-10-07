@@ -116,17 +116,7 @@ public class MyToggleButton extends View implements OnClickListener {
 
 	}
 
-	/**
-	 * 刷新当请view的状态
-	 */
-	private void flushViewStat() {
-		if (btnStat) {
-			slideBtn_left = bgBitmap.getWidth() - slideBtn.getWidth();
-		} else {
-			slideBtn_left = 0;
-		}
-		flushView();
-	}
+
 
 	// 记录当前手指拖动按钮的位置
 	private int lastx;
@@ -142,7 +132,7 @@ public class MyToggleButton extends View implements OnClickListener {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			firstx = lastx = (int) event.getX();
-			isDrag=false;
+			isDrag = false;
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -158,6 +148,17 @@ public class MyToggleButton extends View implements OnClickListener {
 			break;
 
 		case MotionEvent.ACTION_UP:
+			// 根据最后的按钮位置(maxleft的一半)，将开关置为开或关，而不是留在半路
+			// 前提实在拖动状态
+			if (isDrag) {
+				int maxleft = bgBitmap.getWidth() - slideBtn.getWidth();
+				if (slideBtn_left<maxleft/2) {
+					btnStat=false;
+				}else{
+					btnStat=true;
+				}
+				flushViewStat();
+			}
 
 			break;
 
@@ -168,6 +169,18 @@ public class MyToggleButton extends View implements OnClickListener {
 		flushView();
 
 		return true;
+	}
+	
+	/**
+	 * 刷新当请view的状态
+	 */
+	private void flushViewStat() {
+		if (btnStat) {
+			slideBtn_left = bgBitmap.getWidth() - slideBtn.getWidth();
+		} else {
+			slideBtn_left = 0;
+		}
+		flushView();
 	}
 
 	/**
