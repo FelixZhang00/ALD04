@@ -101,14 +101,18 @@ public class MyToggleButton extends View implements OnClickListener {
 		super.onLayout(changed, left, top, right, bottom);
 	}
 
+	// 判断是否拖动
 	private boolean isDrag = false;
+
 	// 记录开关当前的状态. false 为关
 	private boolean btnStat = false;
 
 	@Override
 	public void onClick(View v) {
-		btnStat = !btnStat;
-		flushViewStat();
+		if (!isDrag) {
+			btnStat = !btnStat;
+			flushViewStat();
+		}
 
 	}
 
@@ -138,9 +142,14 @@ public class MyToggleButton extends View implements OnClickListener {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			firstx = lastx = (int) event.getX();
+			isDrag=false;
 			break;
 
 		case MotionEvent.ACTION_MOVE:
+			// 如果距离大于5个像素就认为是拖动，废了点击(即改变拖动标记)
+			if (Math.abs(event.getX() - firstx) > 5) {
+				isDrag = true;
+			}
 			// 手指移动的距离
 			int dis = (int) (event.getX() - lastx);
 
@@ -168,7 +177,7 @@ public class MyToggleButton extends View implements OnClickListener {
 		// 确保按钮在可移动范围内 即 slideBtn_left∈[0,maxleft]
 		int maxleft = bgBitmap.getWidth() - slideBtn.getWidth();
 		slideBtn_left = (slideBtn_left > 0) ? slideBtn_left : 0;
-		slideBtn_left = (slideBtn_left <maxleft) ? slideBtn_left : maxleft;
+		slideBtn_left = (slideBtn_left < maxleft) ? slideBtn_left : maxleft;
 
 		invalidate();
 	}
