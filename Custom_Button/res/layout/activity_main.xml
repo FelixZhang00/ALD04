@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:jamffy="http://schemas.android.com/apk/res/jamffy.example.custom_button"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,6 +8,9 @@
 
     <jamffy.example.custom_button.MyToggleButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        jamffy:bg="@drawable/switch_background"
+        jamffy:slideBtnStat="true"
+        jamffy:slideBtnbg="@drawable/slide_button" />
 
 </RelativeLayout>

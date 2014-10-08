@@ -1,6 +1,8 @@
 package jamffy.example.custom_button;
 
+import android.R.raw;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,11 +23,15 @@ import android.view.View.OnClickListener;
 public class MyToggleButton extends View implements OnClickListener {
 
 	private Bitmap bgBitmap;
+	private int bgBitmapId;
 	private Bitmap slideBtn;
+	private int slideBtnId;
 	private Paint paint;
 
 	// 按钮的左边界，改变左边界的值就能实现拖动效果了
 	private int slideBtn_left = 0;
+	// 在布局文件中可以设置该属性，如果没有将使用默认值
+	private boolean slideBtnStat;
 
 	/**
 	 * 在代码里面创建对象的时候，使用此构造方法
@@ -44,6 +50,56 @@ public class MyToggleButton extends View implements OnClickListener {
 	 */
 	public MyToggleButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		/*
+		 * AttributeSet 对XML文件解析后的结果，封装为 AttributeSet 对象。 存储的都是原始数据。仅对数据进行简单加工。
+		 */
+		int count = attrs.getAttributeCount();
+		for (int i = 0; i < count; i++) {
+			String name = attrs.getAttributeName(i);
+			String value = attrs.getAttributeValue(i);
+			System.out.println("name=" + name + ",value=" + value);
+		}
+
+		System.out.println("==================");
+		/**
+		 * TypedArray是对AttributeSet 中的原始数据 按照 图纸中的说明（R.styleable.MyView 中的类型声名）
+		 * 创建出具体的对象。
+		 */
+
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				R.styleable.MyToggleButton);
+
+		int taCount = ta.getIndexCount();
+		for (int i = 0; i < taCount; i++) {
+			int itemId = ta.getIndex(i);
+			System.out.println(itemId + "");
+
+			switch (itemId) {
+			case R.styleable.MyToggleButton_bg:
+				ta.getDrawable(itemId);
+				bgBitmapId = ta.getResourceId(itemId, R.drawable.ic_launcher);
+				System.out.println(bgBitmapId + "");
+				break;
+
+			case R.styleable.MyToggleButton_slideBtnbg:
+				ta.getDrawable(itemId);
+
+				slideBtnId = ta.getResourceId(itemId, R.drawable.ic_launcher);
+				System.out.println(slideBtnId + "");
+				break;
+
+			case R.styleable.MyToggleButton_slideBtnStat:
+				slideBtnStat = ta.getBoolean(itemId, true);
+				System.out.println(slideBtnStat);
+				break;
+
+			default:
+				break;
+			}
+
+		}
+
 		initView();
 	}
 
@@ -51,12 +107,17 @@ public class MyToggleButton extends View implements OnClickListener {
 		/*
 		 * 需要一个写着开关字样的背景、一个按钮图片
 		 */
-		bgBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.switch_background);
+		bgBitmap = BitmapFactory.decodeResource(getResources(), bgBitmapId);
 
-		slideBtn = BitmapFactory.decodeResource(getResources(),
-				R.drawable.slide_button);
+		slideBtn = BitmapFactory.decodeResource(getResources(), slideBtnId);
 
+		// 根据布局文件中设置的属性控制按钮的位置
+		if (slideBtnStat) {
+			slideBtn_left = bgBitmap.getWidth() - slideBtn.getWidth();
+		} else {
+			slideBtn_left = 0;
+		}
+		
 		// 初始化画笔
 		paint = new Paint();
 		paint.setAntiAlias(true); // 打开抗锯齿
@@ -116,8 +177,6 @@ public class MyToggleButton extends View implements OnClickListener {
 
 	}
 
-
-
 	// 记录当前手指拖动按钮的位置
 	private int lastx;
 	// 记录第一次触摸的值
@@ -152,10 +211,10 @@ public class MyToggleButton extends View implements OnClickListener {
 			// 前提实在拖动状态
 			if (isDrag) {
 				int maxleft = bgBitmap.getWidth() - slideBtn.getWidth();
-				if (slideBtn_left<maxleft/2) {
-					btnStat=false;
-				}else{
-					btnStat=true;
+				if (slideBtn_left < maxleft / 2) {
+					btnStat = false;
+				} else {
+					btnStat = true;
 				}
 				flushViewStat();
 			}
@@ -170,7 +229,7 @@ public class MyToggleButton extends View implements OnClickListener {
 
 		return true;
 	}
-	
+
 	/**
 	 * 刷新当请view的状态
 	 */
