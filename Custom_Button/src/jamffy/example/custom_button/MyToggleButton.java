@@ -154,7 +154,7 @@ public class MyToggleButton extends View implements OnClickListener {
 
 	@Override
 	/*
-	 * 确定view的位置 自定义view的时候作用不大
+	 * 确定view的位置 自定义view的时候作用不大. 主要用在viewgroup中
 	 */
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {
