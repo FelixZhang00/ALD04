@@ -27,8 +27,8 @@ public class MainActivity extends Activity {
 			R.drawable.c, R.drawable.a, R.drawable.e, };
 
 	// 图片标题集合
-	private final String[] imageDescriptions = { "乐视网TV版大派送",
-			"扑树又回来啦！再唱经典老歌引万人大合唱", "揭秘北京电影如何升级", "巩俐不低俗，我就不能低俗", "热血屌丝的反杀" };
+	private final String[] imageDescriptions = { "原创：中国“飞鱼”鹰击8系列反舰导弹族谱",
+			"土耳其库尔德人抗议引发冲突致14死", "【新浪有奖征集】国庆晒人肉", "全球多地现月全食景观", "自驾游汽车运输班列返京 车主盛赞方便" };
 
 	private List<ImageView> mList;
 	private int lastposition = 0;
