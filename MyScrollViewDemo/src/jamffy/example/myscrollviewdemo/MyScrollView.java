@@ -122,7 +122,7 @@ public class MyScrollView extends ViewGroup {
 	 * 
 	 * @param nextId
 	 */
-	private void moveToDest(int nextId) {
+	public void moveToDest(int nextId) {
 		/*
 		 * 对 nextId 进行判断 ，确保 是在合理的范围 即 nextId >=0 && nextId <=getChildCount()-1
 		 */
@@ -153,8 +153,11 @@ public class MyScrollView extends ViewGroup {
 
 		// 要移动的距离=目的地-当前位置（在屏幕的最左边）
 		int distance = currId * getWidth() - getScrollX();
-		myScroller.startScroll(getScrollX(), 0, distance, 0);
+		// myScroller.startScroll(getScrollX(), 0, distance, 0);
 
+		// 切换的时间距离的变化而变化
+		myScroller
+				.startScroll(getScrollX(), 0, distance, 0, Math.abs(distance));
 		// 刷新操作不仅会调用onDraw() ,还会调用computeScroll()
 		invalidate();
 	}

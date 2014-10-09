@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class MainActivity extends Activity {
 
@@ -31,10 +32,11 @@ public class MainActivity extends Activity {
 			wSv.addView(iv);
 			
 			RadioButton rb=new RadioButton(this);
+			rb.setId(i);
 			wRG.addView(rb);
 			if (i == 0) {
-				RadioButton radioButton=(RadioButton) wRG.getChildAt(i);
-				radioButton.setChecked(true);
+				((RadioButton) wRG.getChildAt(i)).setChecked(true);
+				
 			}
 			
 		}
@@ -43,8 +45,17 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void moveToDest(int currId) {
-				RadioButton radioButton= (RadioButton) wRG.getChildAt(currId);
-				radioButton.setChecked(true);
+				((RadioButton) wRG.getChildAt(currId)).setChecked(true);
+				
+			}
+		});
+		
+		wRG.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				wSv.moveToDest(checkedId);	
+				
 			}
 		});
 		
