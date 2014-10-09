@@ -7,12 +7,18 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Scroller;
 
 public class MyScrollView extends ViewGroup {
 
 	// 手势识别的工具类
 	private GestureDetector detector;
 	private Context context;
+
+	// private MyScroller myScroller;
+
+	// 系统提供的Scroller，有加速的动画效果
+	private Scroller myScroller;
 
 	/**
 	 * 在代码里面创建对象的时候，使用此构造方法
@@ -53,7 +59,7 @@ public class MyScrollView extends ViewGroup {
 		case MotionEvent.ACTION_UP:
 			// 计算移动的距离
 			int dis = (int) (event.getX() - firstX);
-			System.out.println("dis=" + dis);
+			// System.out.println("dis=" + dis);
 			// 处理切换子view的逻辑
 			ctrlSwitchView(dis);
 			break;
@@ -84,7 +90,6 @@ public class MyScrollView extends ViewGroup {
 			}
 		}
 		moveToDest(nextId);
-
 	}
 
 	/**
@@ -97,7 +102,7 @@ public class MyScrollView extends ViewGroup {
 		 * 对 nextId 进行判断 ，确保 是在合理的范围 即 nextId >=0 && nextId <=getChildCount()-1
 		 */
 
-		System.out.println("nextid=" + nextId);
+		// System.out.println("nextid=" + nextId);
 		// 仔细看下面这段代码，不能确保在合理的范围
 		currId = (nextId <= getChildCount() - 1) ? nextId
 				: (getChildCount() - 1);
@@ -112,14 +117,39 @@ public class MyScrollView extends ViewGroup {
 			currId = (getChildCount() - 1);
 		}
 
-		System.out.println("currid=" + currId);
-		scrollTo(currId * getWidth(), 0);
+		// System.out.println("currid=" + currId);
+		// 瞬间移动
+		// scrollTo(currId * getWidth(), 0);
+
+		// 要移动的距离=目的地-当前位置（在屏幕的最左边）
+		int distance = currId * getWidth() - getScrollX();
+		myScroller.startScroll(getScrollX(), 0, distance, 0);
+
+		// 刷新操作不仅会调用onDraw() ,还会调用computeScroll()
+		invalidate();
+	}
+
+	@Override
+	// 重新设置子view的位置
+	// invalidate(); 会导致 computeScroll（）这个方法的执行
+	public void computeScroll() {
+		if (myScroller.computeScrollOffset()) {
+			int newX = myScroller.getCurrX();
+			System.out.println("newX=" + newX);
+			scrollTo(newX, 0);
+			invalidate();
+		}
+
+		super.computeScroll();
 	}
 
 	/**
 	 * 初始化view
 	 */
 	private void initView() {
+		// myScroller = new MyScroller(context);
+		myScroller = new Scroller(context);
+
 		detector = new GestureDetector(context, new OnGestureListener() {
 
 			@Override
