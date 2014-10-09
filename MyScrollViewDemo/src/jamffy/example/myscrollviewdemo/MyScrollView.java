@@ -28,14 +28,92 @@ public class MyScrollView extends ViewGroup {
 		initView();
 	}
 
+	// 记录当前子view的编号
+	private int currId = 0;
+	// 记录down 时的位置
+	private int firstX = 0;
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		System.out.println(" onTouch");
+
 		detector.onTouchEvent(event);
+
+		// 实现自定义的效果
+		// 子view被横向拖动超过屏幕宽度的一半及以上，并且松手时，就自动弹到下一个view
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			firstX = (int) event.getX();
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+
+			break;
+
+		case MotionEvent.ACTION_UP:
+			// 计算移动的距离
+			int dis = (int) (event.getX() - firstX);
+			System.out.println("dis=" + dis);
+			// 处理切换子view的逻辑
+			ctrlSwitchView(dis);
+			break;
+
+		default:
+			break;
+		}
 
 		// onTounch 需要消费掉事件
 		return true;
+	}
+
+	// 找到下一个子view的编号 ，为处理切换子view的逻辑提供辅助
+	private void ctrlSwitchView(int dis) {
+		int nextId = currId;
+		// 判断手指移动的方向及距离
+		if (dis > 0) { // 手指向右移动
+			if (dis >= getWidth() / 2) { // 且达到切换下一个view的指标
+				nextId--;
+			} else { // 没达到指标，当前子view归到原位
+				nextId = currId;
+			}
+		} else { // 手指向左移动
+			if (dis <= -getWidth() / 2) {
+				nextId++;
+			} else {
+				nextId = currId;
+			}
+		}
+		moveToDest(nextId);
+
+	}
+
+	/**
+	 * 处理切换子view的逻辑。移动被选中的view到屏幕
+	 * 
+	 * @param nextId
+	 */
+	private void moveToDest(int nextId) {
+		/*
+		 * 对 nextId 进行判断 ，确保 是在合理的范围 即 nextId >=0 && nextId <=getChildCount()-1
+		 */
+
+		System.out.println("nextid=" + nextId);
+		// 仔细看下面这段代码，不能确保在合理的范围
+		currId = (nextId <= getChildCount() - 1) ? nextId
+				: (getChildCount() - 1);
+		currId = (nextId >= 0) ? nextId : 0;
+
+		// 修改如下：
+		if (nextId >= 0 && nextId <= (getChildCount() - 1)) {
+			currId = nextId;
+		} else if (nextId < 0) {
+			currId = 0;
+		} else if (nextId > (getChildCount() - 1)) {
+			currId = (getChildCount() - 1);
+		}
+
+		System.out.println("currid=" + currId);
+		scrollTo(currId * getWidth(), 0);
 	}
 
 	/**
