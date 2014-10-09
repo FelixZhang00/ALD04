@@ -24,6 +24,23 @@ public class MyScrollView extends ViewGroup {
 	// 判断当前是否处于快速划动的状态
 	private boolean isFling;
 
+	// 定义一个借口对象
+	// 作用是把当前view的编号传递给调用此接口者
+	private MyPageChangedListener myPageChangedListener;
+
+	public interface MyPageChangedListener {
+		void moveToDest(int currId);
+	};
+
+	public MyPageChangedListener getMyPageChangedListener() {
+		return myPageChangedListener;
+	}
+
+	public void setMyPageChangedListener(
+			MyPageChangedListener myPageChangedListener) {
+		this.myPageChangedListener = myPageChangedListener;
+	}
+
 	/**
 	 * 在代码里面创建对象的时候，使用此构造方法
 	 */
@@ -123,6 +140,11 @@ public class MyScrollView extends ViewGroup {
 			currId = 0;
 		} else if (nextId > (getChildCount() - 1)) {
 			currId = (getChildCount() - 1);
+		}
+
+		// 触发listener事件
+		if (myPageChangedListener != null) {
+			myPageChangedListener.moveToDest(currId);
 		}
 
 		// System.out.println("currid=" + currId);

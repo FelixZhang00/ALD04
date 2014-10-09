@@ -2,10 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:orientation="vertical"
-  
+    android:orientation="vertical"
     tools:context="jamffy.example.myscrollviewdemo.MainActivity" >
 
+    <RadioGroup 
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        ></RadioGroup>
+    
     <jamffy.example.myscrollviewdemo.MyScrollView
         android:id="@+id/myscrollview"
         android:layout_width="match_parent"
