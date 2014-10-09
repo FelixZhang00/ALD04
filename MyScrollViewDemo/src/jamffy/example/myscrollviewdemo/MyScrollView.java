@@ -15,10 +15,14 @@ public class MyScrollView extends ViewGroup {
 	private GestureDetector detector;
 	private Context context;
 
+	// 自定义的Scroller计算距离工具
 	// private MyScroller myScroller;
 
 	// 系统提供的Scroller，有加速的动画效果
 	private Scroller myScroller;
+
+	// 判断当前是否处于快速划动的状态
+	private boolean isFling;
 
 	/**
 	 * 在代码里面创建对象的时候，使用此构造方法
@@ -57,11 +61,15 @@ public class MyScrollView extends ViewGroup {
 			break;
 
 		case MotionEvent.ACTION_UP:
-			// 计算移动的距离
-			int dis = (int) (event.getX() - firstX);
-			// System.out.println("dis=" + dis);
-			// 处理切换子view的逻辑
-			ctrlSwitchView(dis);
+
+			if (isFling) { // 如果正在快速划动状态,处理逻辑就交给onFling来做，这里就不用管了
+				// 计算移动的距离
+				int dis = (int) (event.getX() - firstX);
+				// System.out.println("dis=" + dis);
+				// 处理切换子view的逻辑
+				ctrlSwitchView(dis);
+			}
+			isFling = false;
 			break;
 
 		default:
@@ -188,7 +196,17 @@ public class MyScrollView extends ViewGroup {
 			// 快速滑动时调用
 			public boolean onFling(MotionEvent e1, MotionEvent e2,
 					float velocityX, float velocityY) {
-				// TODO Auto-generated method stub
+				// 监听到手势属于快速移动，置状态位
+				isFling = true;
+
+				// 判断下一个view的编号
+				// 在这里不负责判断currid是否在有效范围内，交给moveToDest负责
+				if (currId > 0 && velocityX > 0) { // 手指往右拉
+					currId--;
+				} else if (currId < getChildCount() && velocityX < 0) { // 手指往左拉
+					currId++;
+				}
+				moveToDest(currId);
 				return false;
 			}
 
