@@ -245,7 +245,19 @@ public class MyScrollView extends ViewGroup {
 	}
 
 	@Override
+	// 在Android的世界里规定：viewgroup不仅要测量自己的大小，还要负责测量子view的大小
+	// 同时Android还赋予了viewgroup强制改变子view大小的权利，就是onLayout
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		for (int i = 0; i < getChildCount(); i++) {
+			View view = getChildAt(i);
+			view.measure(widthMeasureSpec, heightMeasureSpec);
+		}
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	}
+
+	@Override
 	/**
+	 * 同时Android还赋予了viewgroup强制改变子view大小的权利，就是onLayout
 	 * 对子view进行布局，确定子view的位置
 	 * changed  若为true ，说明布局发生了变化
 	 * l\t\r\b\  是指当前viewgroup 在其父view中的位置 
