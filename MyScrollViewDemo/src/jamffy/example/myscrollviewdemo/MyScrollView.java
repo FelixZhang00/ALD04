@@ -59,6 +59,57 @@ public class MyScrollView extends ViewGroup {
 	private int currId = 0;
 	// 记录down 时的位置
 	private int firstX = 0;
+	private int firstY = 0;
+
+	@Override
+	// 分法touch事件
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		return super.dispatchTouchEvent(ev);
+	}
+
+	@Override
+	// 当返回true当前viewgroup把苹果吃掉了（中断掉touch事件），而不给儿子吃；当返回false
+	// 把苹果留给儿子吃
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		boolean result = false;
+		// 只有当x方向的移动距离>y方向时，才让viewgroup中断事件
+		// 其它情况都让子view来处理touch事件
+
+		switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			// 解决拖动时图片跳动的问题
+			//
+			detector.onTouchEvent(ev);
+
+			firstX = (int) ev.getX();
+			firstY = (int) ev.getY();
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			int disX = (int) Math.abs(ev.getX() - firstX);
+			int disY = (int) Math.abs(ev.getY() - firstY);
+			/*
+			 * 当move满足一定条件后，touch事件就交给viewgroup中的onTouch方法来处理，但是此时的touch是
+			 * 没有down事件的，所以需要把当前捕获的down事件的进行的逻辑交给viewgroup中的onTouch方法中的 down事件
+			 */
+
+			if (disX > 10 && disX > disY) { // 中断子view的touch事件，而由当前viewgroup来处理
+				result = true;
+			} else {
+				result = false;
+			}
+			break;
+
+		case MotionEvent.ACTION_UP:
+
+			break;
+		default:
+			break;
+		}
+
+		return result;
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -79,7 +130,7 @@ public class MyScrollView extends ViewGroup {
 
 		case MotionEvent.ACTION_UP:
 
-			if (isFling) { // 如果正在快速划动状态,处理逻辑就交给onFling来做，这里就不用管了
+			if (!isFling) { // 如果正在快速划动状态,处理逻辑就交给onFling来做，这里就不用管了
 				// 计算移动的距离
 				int dis = (int) (event.getX() - firstX);
 				// System.out.println("dis=" + dis);
@@ -129,9 +180,9 @@ public class MyScrollView extends ViewGroup {
 
 		// System.out.println("nextid=" + nextId);
 		// 仔细看下面这段代码，不能确保在合理的范围
-		currId = (nextId <= getChildCount() - 1) ? nextId
-				: (getChildCount() - 1);
-		currId = (nextId >= 0) ? nextId : 0;
+		// currId = (nextId <= getChildCount() - 1) ? nextId
+		// : (getChildCount() - 1);
+		// currId = (nextId >= 0) ? nextId : 0;
 
 		// 修改如下：
 		if (nextId >= 0 && nextId <= (getChildCount() - 1)) {
@@ -226,9 +277,9 @@ public class MyScrollView extends ViewGroup {
 
 				// 判断下一个view的编号
 				// 在这里不负责判断currid是否在有效范围内，交给moveToDest负责
-				if (currId > 0 && velocityX > 0) { // 手指往右拉
+				if (velocityX > 0) { // 手指往右拉
 					currId--;
-				} else if (currId < getChildCount() && velocityX < 0) { // 手指往左拉
+				} else if (velocityX < 0) { // 手指往左拉
 					currId++;
 				}
 				moveToDest(currId);
