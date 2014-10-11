@@ -23,6 +23,11 @@ public class MyView extends View {
 
 	private Paint mPaint;
 	private int alpha;
+
+	// 有几种供选择的颜色
+	private int[] colors = new int[] { Color.RED, Color.YELLOW, Color.GREEN,
+			Color.BLUE, Color.rgb(245, 66, 241) };
+
 	/**
 	 * 每隔一定的时间刷新view，将改变后的view呈现出来
 	 */
@@ -55,7 +60,8 @@ public class MyView extends View {
 		mPaint = new Paint();
 		// 打开抗锯齿
 		mPaint.setAntiAlias(true);
-		mPaint.setColor(Color.GREEN);
+		// 设置画笔的随机颜色
+		mPaint.setColor(colors[(int) (Math.random()*(colors.length))]);
 		// 这样画出来的圆是空心的
 		mPaint.setStyle(Style.STROKE);
 		// 设置半径厚度
