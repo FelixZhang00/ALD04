@@ -100,6 +100,7 @@ public class MyRingWave extends View {
 			currY = (int) event.getY();
 			initView();
 			addWave2List(currX, currY, mPaint);
+			// 只要在第一次点击时向handler发送消息即可，后面的消息由handler控制延迟发送
 			// startAnim();
 			break;
 
@@ -120,23 +121,24 @@ public class MyRingWave extends View {
 	// 根据waves中是否还有元素来设置isRunning的值
 	private void flushStats() {
 
-		// 负责剔除透明度为0的wave
 		for (int i = 0; i < waves.size(); i++) {
-			int nextAlpha = Math.max(0, waves.get(i).wPaint.getAlpha() - 5);
+			Wave wave = waves.get(i);
+			int nextAlpha = Math.max(0, wave.wPaint.getAlpha() - 5);
+			// 负责剔除透明度为0的wave
 			if (nextAlpha == 0) {
 				waves.remove(i);
-				// 跳出当前的for循环，因为每次只可能有一个wave的透明度为0
+				i--;
+				// 跳出当前的for循环，重新遍历
 				continue;
 			}
+			// 如果wave的透明度不为0
+			// 重新设置waves中所有wave的参数
+			wave.wR += 4;
+			wave.wPaint.setStrokeWidth(waves.get(i).wR / 4);
+			wave.wPaint.setAlpha(nextAlpha);
+
 		}
 
-		// 遍历wave集合中的每一个元素，给每一个元素的参数都重新设置下
-		for (int i = 0; i < waves.size(); i++) {
-			int nextAlpha = Math.max(0, waves.get(i).wPaint.getAlpha() - 5);
-			waves.get(i).wR += 4;
-			waves.get(i).wPaint.setStrokeWidth(waves.get(i).wR / 4);
-			waves.get(i).wPaint.setAlpha(nextAlpha);
-		}
 		// 根据waves中是否还有元素来设置isRunning的值
 		if (waves.size() == 0) {
 			isRunning = false;

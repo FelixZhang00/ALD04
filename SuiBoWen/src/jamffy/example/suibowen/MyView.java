@@ -56,6 +56,13 @@ public class MyView extends View {
 		initView();
 	}
 
+	@Override
+	// 当ondraw画出来的图超出边界时调用的方法
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+
+	}
+
 	private void initView() {
 		radius = 0;
 		alpha = 255;
