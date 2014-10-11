@@ -12,6 +12,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * @author tmac 只能同时显示一个水波纹
+ */
 public class MyView extends View {
 
 	// 记录触摸时的位置
@@ -61,7 +64,7 @@ public class MyView extends View {
 		// 打开抗锯齿
 		mPaint.setAntiAlias(true);
 		// 设置画笔的随机颜色
-		mPaint.setColor(colors[(int) (Math.random()*(colors.length))]);
+		mPaint.setColor(colors[(int) (Math.random() * (colors.length))]);
 		// 这样画出来的圆是空心的
 		mPaint.setStyle(Style.STROKE);
 		// 设置半径厚度
