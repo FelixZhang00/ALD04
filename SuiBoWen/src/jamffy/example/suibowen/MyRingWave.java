@@ -49,9 +49,8 @@ public class MyRingWave extends View {
 			flushStats();
 			invalidate();
 			if (isRunning) {
-				handler.sendEmptyMessageAtTime(0, 50);
+				handler.sendEmptyMessageDelayed(0, 50);
 			}
-
 			super.handleMessage(msg);
 		}
 
@@ -126,6 +125,8 @@ public class MyRingWave extends View {
 			int nextAlpha = Math.max(0, waves.get(i).wPaint.getAlpha() - 5);
 			if (nextAlpha == 0) {
 				waves.remove(i);
+				// 跳出当前的for循环，因为每次只可能有一个wave的透明度为0
+				continue;
 			}
 		}
 
@@ -136,7 +137,6 @@ public class MyRingWave extends View {
 			waves.get(i).wPaint.setStrokeWidth(waves.get(i).wR / 4);
 			waves.get(i).wPaint.setAlpha(nextAlpha);
 		}
-
 		// 根据waves中是否还有元素来设置isRunning的值
 		if (waves.size() == 0) {
 			isRunning = false;

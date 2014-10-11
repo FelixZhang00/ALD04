@@ -42,7 +42,7 @@ public class MyView extends View {
 			invalidate();
 			// 每隔100ms重新画圆
 			if (mPaint.getAlpha() != 0) { // 当透明度为0时，停止发送
-				handler.sendEmptyMessageAtTime(0, 50);
+				handler.sendEmptyMessageDelayed(0, 50);
 			} else {// 重新设置初始参数
 				initView();
 			}
