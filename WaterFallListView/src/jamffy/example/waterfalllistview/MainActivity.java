@@ -18,8 +18,10 @@ public class MainActivity extends Activity {
 	private ListView Lv2;
 	private ListView Lv3;
 
-	private int[] ids = new int[] { R.drawable.a, R.drawable.b, R.drawable.c,
-			R.drawable.d };
+//	private int[] ids = new int[] { R.drawable.a, R.drawable.b, R.drawable.c,
+//			R.drawable.d };
+	private int[] ids = new int[] { R.drawable.shape_1, R.drawable.shape_2, R.drawable.shape_3,
+			R.drawable.shape_4 };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
